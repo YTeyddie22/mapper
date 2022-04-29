@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&display=swap"
+			rel="stylesheet"
+		/>
+
+		<link
+			rel="stylesheet"
+			href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css"
+			integrity="sha512-YWzhKL2whUzgiheMoBFwW8CKV4qpHQAEuvilg9FAn5VJUDwKZZxkJNuGM4XkWuk94WCrrwslk8yWNGmY1EduTA=="
+			crossorigin="anonymous"
+			referrerpolicy="no-referrer"
+		/>
+
+		<link
+			rel="stylesheet"
+			href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+			integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+			crossorigin=""
+		/>
+		<script
+			defer
+			src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+			integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+			crossorigin=""
+		></script>
+
+		<script defer src="script.js"></script>
+		<link rel="stylesheet" href="styles.css" />
+		<title>Mapper</title>
+	</head>
+	<body>
+		<div class="sidebar">
+			<ul class="workouts">
+				<form class="form">
+					<div class="form__row">
+						<label class="form__label">Type</label>
+						<select class="form__input form__input--type">
+							<option value="running">Running</option>
+							<option value="cycling">Cycling</option>
+						</select>
+					</div>
+
+					<div class="form__row">
+						<label class="form__label">Distance</label>
+						<input
+							class="form__input form__input--distance"
+							placeholder="
+						km"
+						/>
+					</div>
+
+					<div class="form__row">
+						<label class="form__label">Duration</label>
+						<input
+							class="form__input form__input--duration"
+							placeholder="min"
+						/>
+					</div>
+
+					<div class="form__row">
+						<label class="form__label">Cadence</label>
+						<input
+							class="form__input form__input--cadence"
+							placeholder="step/min"
+						/>
+					</div>
+
+					<div class="form__row form__row--hidden">
+						<label class="form__label">Elevation</label>
+						<input
+							class="form__input form__input--elevation"
+							placeholder="meters"
+						/>
+					</div>
+
+					<button class="form__btn">confirm</button>
+				</form>
+			</ul>
+
+			<div class="footer">
+				<p>Teddy Yongo</p>
+				<ul class="footer__socials">
+					<li class="social">
+						<a
+							class="footer__link"
+							target="_blank"
+							href="https://github.com/YTeyddie22"
+							><i class="fa-brands fa-github"></i
+						></a>
+					</li>
+					<li class="social">
+						<a
+							class="footer__link"
+							target="_blank"
+							href="https://www.instagram.com/yteyddie22/"
+							><i class="fa-brands fa-instagram"></i
+						></a>
+					</li>
+					<li class="social">
+						<a
+							class="footer__link"
+							target="_blank"
+							href="https://twitter.com/YTeyddie22"
+							><i class="fa-brands fa-twitter"></i
+						></a>
+					</li>
+					<li class="social">
+						<a
+							class="footer__link"
+							target="_blank"
+							href="https://www.linkedin.com/in/teddy-yongo-4181111b1/"
+							><i class="fa-brands fa-linkedin-in"></i
+						></a>
+					</li>
+					<li class="social">
+						<a
+							class="footer__link"
+							target="_blank"
+							href="https://www.reddit.com/user/Teddev2206"
+							><i class="fa-brands fa-reddit"></i
+						></a>
+					</li>
+				</ul>
+			</div>
+		</div>
+
+		<div id="map"></div>
+	</body>
+</html>
