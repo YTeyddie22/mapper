@@ -92,6 +92,14 @@ class App {
 	//? 1. Get the current position
 	constructor() {
 		this._getPosition;
+
+		//* get local Storage
+
+		this._getLocalStorage();
+
+		form.addEventListener('submit', this._newWorkOut.bind(this));
+
+		console.log(this_loadMap(this._getPosition()));
 	}
 
 	//* 1. Loading the map
@@ -181,7 +189,7 @@ class App {
 
 	//* 7 Creating a new workout function
 
-	_newWorkout(e) {
+	_newWorkOut(e) {
 		e.preventDefault();
 		//* 1 check the validity
 
@@ -235,6 +243,10 @@ class App {
 
 		//*5 To remove the form for a new form to be loaded
 		this._hideForm();
+
+		//*6 Set Local Storage
+
+		this._localStorage();
 	}
 
 	//*  Using the storage (Local Storage)
@@ -255,6 +267,10 @@ class App {
 	reset() {
 		localStorage.removeItem('workouts');
 		location.reload();
+	}
+
+	_renderWorkout(el) {
+		console.log(el);
 	}
 }
 
