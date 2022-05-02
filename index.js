@@ -9,7 +9,17 @@ const inputCadence = document.querySelector('.form__input--cadence');
 const inputElevation = document.querySelector('.form__input--elevation');
 
 ///////////////////////////////////////////////////////////////
-//! Architecture
+//! Architecture OOP
+
+class Workout {
+	date = new Date();
+	id = toString(Date.now()).slice(-10);
+	constructor(coords, distance, duration) {
+		this.coords = coords;
+		this.distance = distance;
+		this.duration = duration;
+	}
+}
 
 class App {
 	#map;
@@ -47,20 +57,14 @@ class App {
 			);
 	}
 
-	//* 3. Render the marker object  !TODO
-
-	//* 4 Rendering the WorkOut function Whether Running or Cycling
-
-	//* 5 Pointer on the map
-
-	//* Showing the form
+	//* 3. Showing the form
 
 	_showForm(ev) {
 		this.#mapEvent = ev;
 		form.classList.remove('hidden');
 	}
 
-	//* Hiding the form
+	//* 4. Hiding the form
 
 	_hideForm() {
 		form.style.display = 'none';
@@ -75,6 +79,17 @@ class App {
 		setTimeout(() => (form.style.display = 'grid'), 1000);
 	}
 
+	//* 5. Toggling input
+
+	_togglingInputField() {
+		inputElevation.closest('.form__row').classList.toggle('form__row--hidden');
+
+		inputCadence.closest('.form__row').classList.toggle('form__row--hidden');
+	}
+
+	//* 6 Rendering the workout marker
+
+	_renderWorkerMarker(workout) {}
 	//*  Using the storage (Local Storage)
 }
 
