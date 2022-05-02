@@ -46,6 +46,36 @@ class App {
 				}
 			);
 	}
+
+	//* 3. Render the marker object  !TODO
+
+	//* 4 Rendering the WorkOut function Whether Running or Cycling
+
+	//* 5 Pointer on the map
+
+	//* Showing the form
+
+	_showForm(ev) {
+		this.#mapEvent = ev;
+		form.classList.remove('hidden');
+	}
+
+	//* Hiding the form
+
+	_hideForm() {
+		form.style.display = 'none';
+
+		form.classList.add('hidden');
+
+		inputCadence.value =
+			inputElevation.value =
+			inputDuration.value =
+			inputDistance.value =
+				'';
+		setTimeout(() => (form.style.display = 'grid'), 1000);
+	}
+
+	//*  Using the storage (Local Storage)
 }
 
 const app = new App();
