@@ -47,6 +47,7 @@ class Workout {
 //! Cycling class
 
 class Cycling extends Workout {
+	type = 'running';
 	constructor(coords, distance, duration, elevationGain) {
 		super(coords, distance, duration);
 		this.elevationGain = elevationGain;
@@ -98,12 +99,21 @@ class App {
 	_loadMap(position) {
 		const { latitude } = position.coords;
 		const { longitude } = position.coords;
+
 		const coords = [latitude, longitude];
+		console.log(coords);
 		this.#map = L.map('map').setView(coords, this.#mapZoom);
 		L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
 			attribution:
 				'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
 		}).addTo(this.#map);
+
+		this.#map.on('click', this._showForm.bind(this));
+
+		this.#workouts.forEach((el) => {
+			//Render marker to all the workouts
+			this._renderWorkoutMarker(el);
+		});
 	}
 
 	//* 2. Getting the current position
@@ -123,6 +133,7 @@ class App {
 	_showForm(ev) {
 		this.#mapEvent = ev;
 		form.classList.remove('hidden');
+		inputDistance.focus();
 	}
 
 	//* 4. Hiding the form
@@ -150,8 +161,101 @@ class App {
 
 	//* 6 Rendering the workout marker
 
-	_renderWorkerMarker(workout) {}
+	_renderWorkoutMarker(workout) {
+		L.marker(workout.coords)
+			.addTo(this.#map)
+			.bindPopup(
+				L.popup({
+					maxWidth: 250,
+					minWidth: 100,
+					autoClose: false,
+					closeOnClick: false,
+					className: `${workout.type}-popup`,
+				})
+			)
+			.setPopupContent(
+				`${workout.type === 'running' ? '🏃‍♂️' : '🚴‍♀️'} ${workout.description}`
+			)
+			.openPopup();
+	}
+
+	//* 7 Creating a new workout function
+
+	_newWorkout(e) {
+		e.preventDefault();
+		//* 1 check the validity
+
+		const isValid = (...inputs) => inputs.every((el) => Number.isFinite(el));
+
+		const positiveNumber = (...inputs) => inputs.every((el) => el > 0);
+
+		const type = inputType.value;
+		const distance = +inputDistance.value;
+		const duration = +inputDuration.value;
+		const { lat, lng } = this.#mapEvent.latlng;
+		let workout;
+
+		//* 1.1 Check if type is running
+		if (type === ' running') {
+			const cadence = +inputCadence.value;
+			if (
+				!isValid(distance, duration, cadence) ||
+				!positiveNumber(distance, duration, cadence)
+			)
+				return alert(`Input number to be positive and finite`);
+
+			workout = new Running([lat, lng], distance, duration, cadence);
+		}
+
+		//* 1.2 Check if the data is valid for cycling
+
+		if (type === 'cycling') {
+			const elevation = +inputElevation.value;
+
+			if (
+				!isValid(distance, duration, elevation) ||
+				!positive(distance, duration)
+			)
+				return alert(`Input has to be Positive Number`);
+
+			workout = new Cycling([lat, lng], distance, duration, elevation);
+		}
+
+		//*2 Adding object ot array
+
+		this.#workouts.push(workout);
+
+		//*3 Put marker on the area clicked
+
+		this._renderWorkoutMarker(workout);
+
+		//TODO
+
+		this.renderWorkout(workout);
+
+		//*5 To remove the form for a new form to be loaded
+		this._hideForm();
+	}
+
 	//*  Using the storage (Local Storage)
+
+	_localStorage() {
+		localStorage.setItem('workouts', JSON.stringify(this.#workouts));
+	}
+
+	_getLocalStorage() {
+		const data = JSON.parse(localStorage.getItem('workouts'));
+
+		if (!data) return;
+
+		this.#workouts = data;
+		this.#workouts.forEach((el) => this._renderWorkout(el));
+	}
+
+	reset() {
+		localStorage.removeItem('workouts');
+		location.reload();
+	}
 }
 
 const app = new App();
