@@ -172,7 +172,6 @@ class App {
 	//* 6 Rendering the workout marker
 
 	_renderWorkoutMarker(workout) {
-		console.log(workout);
 		L.marker(workout.coords)
 			.addTo(this.#map)
 			.bindPopup(
@@ -301,12 +300,14 @@ class App {
 
 			if (
 				!isValid(distance, duration, elevation) ||
-				!positive(distance, duration)
+				!positiveNumber(distance, duration)
 			)
 				return alert(`Input has to be Positive Number`);
 
 			workout = new Cycling([lat, lng], distance, duration, elevation);
 		}
+
+		console.log(workout);
 
 		//*2 Adding object ot array
 
