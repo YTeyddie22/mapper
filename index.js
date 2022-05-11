@@ -82,6 +82,7 @@ class Running extends Workout {
 const running1 = new Running();
 
 const cycling1 = new Cycling();
+
 //! Mother App Engine
 class App {
 	#map;
@@ -91,22 +92,27 @@ class App {
 
 	//? 1. Get the current position
 	constructor() {
+		//* 1 Get current position
 		this._getPosition;
 
-		//* get local Storage
+		//* 2 get local Storage
 
 		this._getLocalStorage();
 
+		//* 3 Event for new Workout
+
 		form.addEventListener('submit', this._newWorkOut.bind(this));
 
-		console.log(this_loadMap(this._getPosition()));
+		//* 4 Onchange event for speed
+
+		inputType.addEventListener('change', this._togglingInputField);
 	}
 
 	//* 1. Loading the map
 
 	_loadMap(position) {
-		const { latitude } = position.coords;
-		const { longitude } = position.coords;
+		const {latitude} = position.coords;
+		const {longitude} = position.coords;
 
 		const coords = [latitude, longitude];
 		console.log(coords);
@@ -187,10 +193,68 @@ class App {
 			.openPopup();
 	}
 
-	//* 7 Creating a new workout function
+	//* 7 Rendering the workouts
+
+	_renderWorkout(el) {
+		let html = `
+		<li class="workout workout--${el.type}" data-id="${el.id}">
+					<h2 class="workout__title">${el.description}</h2>
+					<div class="workout__details">
+						<span class="workout__icon">${el.type === 'cycling' ? '🚴‍♀️' : '🏃‍♂️'}</span>
+						<span class="workout__value">${el.distance}</span>
+						<span class="workout__unit">km</span>
+					</div>
+					<div class="workout__details">
+						<span class="workout__icon">⏱</span>
+						<span class="workout__value">${el.duration}</span>
+						<span class="workout__unit">min</span>
+					</div>`;
+
+		if (workout.type === 'running') {
+			html += `<div class="workout__details">
+						<span class="workout__icon">⚡️</span>
+						<span class="workout__value">${workout.pace.toFixed(1)}</span>
+						<span class="workout__unit">min/km</span>
+					</div>
+					<div class="workout__details">
+						<span class="workout__icon">🦶🏼</span>
+						<span class="workout__value">${workout.cadence}</span>
+						<span class="workout__unit">spm</span>
+					</div>
+				</li>
+	`;
+		}
+		//? 2. If cycling
+
+		if (workout.type === 'cycling') {
+			html += `
+			<div class="workout__details">
+            	<span class="workout__icon">⚡️</span>
+            	<span class="workout__value">${workout.speed.toFixed(1)}</span>
+            	<span class="workout__unit">km/h</span>
+         	</div>
+         	<div class="workout__details">
+            	<span class="workout__icon">⛰</span>
+            	<span class="workout__value">${workout.elevationGain}</span>
+            	<span class="workout__unit">m</span>
+         	</div>
+			`;
+		}
+
+		form.insertAdjacentHTML('afterend', html);
+	}
+
+	//* 8 Moving to the clicked point
+
+	_moveToClickedPoint(e) {
+		const exerciseElement = e.target.closest('.workout');
+	}
+
+	//* 9 Creating a new workout function
 
 	_newWorkOut(e) {
 		e.preventDefault();
+
 		//* 1 check the validity
 
 		const isValid = (...inputs) => inputs.every((el) => Number.isFinite(el));
@@ -200,7 +264,7 @@ class App {
 		const type = inputType.value;
 		const distance = +inputDistance.value;
 		const duration = +inputDuration.value;
-		const { lat, lng } = this.#mapEvent.latlng;
+		const {lat, lng} = this.#mapEvent.latlng;
 		let workout;
 
 		//* 1.1 Check if type is running
@@ -237,11 +301,12 @@ class App {
 
 		this._renderWorkoutMarker(workout);
 
-		//TODO
+		//* 4 Render workout action
 
-		this.renderWorkout(workout);
+		this._renderWorkout(workout);
 
 		//*5 To remove the form for a new form to be loaded
+
 		this._hideForm();
 
 		//*6 Set Local Storage
@@ -249,12 +314,13 @@ class App {
 		this._localStorage();
 	}
 
-	//*  Using the storage (Local Storage)
+	//* 9.  Using the storage (Local Storage) and setting data
 
 	_localStorage() {
 		localStorage.setItem('workouts', JSON.stringify(this.#workouts));
 	}
 
+	//* 10. Getting data from local storage
 	_getLocalStorage() {
 		const data = JSON.parse(localStorage.getItem('workouts'));
 
@@ -264,13 +330,10 @@ class App {
 		this.#workouts.forEach((el) => this._renderWorkout(el));
 	}
 
+	//* 11 Resetting the local storage
 	reset() {
 		localStorage.removeItem('workouts');
 		location.reload();
-	}
-
-	_renderWorkout(el) {
-		console.log(el);
 	}
 }
 
