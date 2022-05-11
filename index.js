@@ -9,8 +9,6 @@ const inputElevation = document.querySelector('.form__input--elevation');
 
 ///////////////////////////////////////////////////////////////
 
-//! Imports
-
 //! Architecture OOP
 
 class Workout {
@@ -79,10 +77,6 @@ class Running extends Workout {
 	}
 }
 
-const running1 = new Running();
-
-const cycling1 = new Cycling();
-
 //! Mother App Engine
 class App {
 	#map;
@@ -93,12 +87,13 @@ class App {
 	//? 1. Get the current position
 	constructor() {
 		//* 1 Get current position
-		this._getPosition;
+		this._getPosition();
 
 		//* 2 get local Storage
 
 		this._getLocalStorage();
 
+		console.log(this);
 		//* 3 Event for new Workout
 
 		form.addEventListener('submit', this._newWorkOut.bind(this));
@@ -106,6 +101,13 @@ class App {
 		//* 4 Onchange event for speed
 
 		inputType.addEventListener('change', this._togglingInputField);
+
+		containerWorkouts.addEventListener(
+			'click',
+			this._moveToClickedPoint.bind(this)
+		);
+
+		//* 5
 	}
 
 	//* 1. Loading the map
@@ -115,7 +117,7 @@ class App {
 		const {longitude} = position.coords;
 
 		const coords = [latitude, longitude];
-		console.log(coords);
+
 		this.#map = L.map('map').setView(coords, this.#mapZoom);
 		L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
 			attribution:
@@ -210,15 +212,15 @@ class App {
 						<span class="workout__unit">min</span>
 					</div>`;
 
-		if (workout.type === 'running') {
+		if (el.type === 'running') {
 			html += `<div class="workout__details">
 						<span class="workout__icon">⚡️</span>
-						<span class="workout__value">${workout.pace.toFixed(1)}</span>
+						<span class="workout__value">${el.pace.toFixed(1)}</span>
 						<span class="workout__unit">min/km</span>
 					</div>
 					<div class="workout__details">
 						<span class="workout__icon">🦶🏼</span>
-						<span class="workout__value">${workout.cadence}</span>
+						<span class="workout__value">${el.cadence}</span>
 						<span class="workout__unit">spm</span>
 					</div>
 				</li>
@@ -226,16 +228,16 @@ class App {
 		}
 		//? 2. If cycling
 
-		if (workout.type === 'cycling') {
+		if (el.type === 'cycling') {
 			html += `
 			<div class="workout__details">
             	<span class="workout__icon">⚡️</span>
-            	<span class="workout__value">${workout.speed.toFixed(1)}</span>
+            	<span class="workout__value">${el.speed.toFixed(1)}</span>
             	<span class="workout__unit">km/h</span>
          	</div>
          	<div class="workout__details">
             	<span class="workout__icon">⛰</span>
-            	<span class="workout__value">${workout.elevationGain}</span>
+            	<span class="workout__value">${el.elevationGain}</span>
             	<span class="workout__unit">m</span>
          	</div>
 			`;
@@ -248,6 +250,19 @@ class App {
 
 	_moveToClickedPoint(e) {
 		const exerciseElement = e.target.closest('.workout');
+
+		if (!exerciseElement) return;
+
+		const workout = this.#workouts.find(
+			(el) => el.id === exerciseElement.dataset.id
+		);
+
+		this.#map.setView(workout.coords, this.#mapZoom, {
+			animate: true,
+			pan: {
+				duration: 1,
+			},
+		});
 	}
 
 	//* 9 Creating a new workout function
@@ -336,5 +351,4 @@ class App {
 		location.reload();
 	}
 }
-
 const app = new App();
