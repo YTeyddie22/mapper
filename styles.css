@@ -21,7 +21,7 @@ html {
 }
 
 body {
-	font-family: 'Manrope', sans-serif;
+	font-family: "Manrope", sans-serif;
 	color: var(--color-light--2);
 	font-weight: 600;
 	line-height: 1.6;
@@ -154,10 +154,6 @@ body {
 	background-color: #fff;
 }
 
-.form__btn {
-	display: none;
-}
-
 .footer {
 	display: grid;
 	grid-template-columns: 1/-1;
@@ -208,5 +204,5 @@ body {
 }
 .cycling-popup .leaflet-popup-content-wrapper {
 	border-right: 5px solid var(--color-brand--1);
-	border-left: 5px solid var(--color-brand--2);
+	border-left: 5px solid var(--color-brand--1);
 }
